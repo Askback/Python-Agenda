@@ -1,3 +1,6 @@
+import os
+import sys
+
 AGENDA =\
     {
         "Marcos":{
@@ -23,12 +26,14 @@ def mostrar_contatos():
         buscar_contatos(contato)
 
 
+
 def buscar_contatos(contato):
     print("Nome:", contato)
     print("Email:", AGENDA[contato]["email"])
     print("Telefone:", AGENDA[contato]["tel"])
     print("Endereço:", AGENDA[contato]["endereco"])
     print("\n**************************************\n")
+
 
 
 
@@ -73,10 +78,12 @@ def escolha(opcao):
         case '5':
             excluir_contatos(input("Digite o nome do contato a ser excluido"))
         case '0':
-            print("Fechando programa")
+            print("Fechando programa (╥︣﹏᷅╥)")
+            sys.exit()
         case _:
+            os.system('clear')
             print("Opcao inválida")
 
-
-menu()
-escolha(input("Escolha uma opção \n"))
+while True:
+    menu()
+    escolha(input("Escolha uma opção \n"))
