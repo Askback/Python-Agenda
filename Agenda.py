@@ -1,43 +1,51 @@
 import os
-import sys
 
 AGENDA =\
     {
-        "Marcos":{
-            "tel":"945202128",
-            "email":"askback@hotmail.com",
-            "endereco":"Rua das ferreiras, 75"
+        "Exemplo1":{
+            "tel":"1111",
+            "email":"exemplo1@gmail.com",
+            "endereco":"Rua x, 11"
         },
-        "Jose":{
-            "tel":"965403237",
-            "email":"england-s2@live.com",
-            "endereco":"Rua pindamoian, 67"
+        "Exemplo2":{
+            "tel":"2222",
+            "email":"exemplo2@live.com",
+            "endereco":"Rua y, 22"
         },
-        "Rugu": {
-            "tel": "969343227",
-            "email": "seven7@live.com",
-            "endereco": "Rua balaomen, 77"
+        "Exemplo3": {
+            "tel": "3333",
+            "email": "exemplo3@hotmail.com",
+            "endereco": "Rua z, 33"
         }
     }
 
 
 def mostrar_contatos():
-    for contato in AGENDA:
-        buscar_contatos(contato)
-
+    if len(AGENDA):
+        for contato in AGENDA:
+            buscar_contatos(contato)
+    else:
+        print(">>> A Agenda está vazia")
 
 
 def buscar_contatos(contato):
-    print("Nome:", contato)
-    print("Email:", AGENDA[contato]["email"])
-    print("Telefone:", AGENDA[contato]["tel"])
-    print("Endereço:", AGENDA[contato]["endereco"])
-    print("\n**************************************\n")
+    try:
+        print("Nome:", contato)
+        print("Email:", AGENDA[contato]["email"])
+        print("Telefone:", AGENDA[contato]["tel"])
+        print("Endereço:", AGENDA[contato]["endereco"])
+        print("\n**************************************\n")
+    except KeyError:
+        print("\n>>>O contato {} não existe \n".format(contato))
+    except Exception as e:
+        print(">>>Um erro inesperado aconteceu {}".format(e))
 
 
+def incluir_editar_contatos(contato):
+    endereco = input("Digite o endereco: ")
+    telefone = input("Digite o telefone: ")
+    email = input("Digite o email: ")
 
-
-def incluir_editar_contatos(contato, email, telefone, endereco):
     AGENDA [contato] = {
         "tel": telefone,
         "email": email,
@@ -48,8 +56,13 @@ def incluir_editar_contatos(contato, email, telefone, endereco):
 
 
 def excluir_contatos(contato):
-    AGENDA.pop(contato)
-    print("\nO contado {} foi excluido com sucesso".format(contato))
+    try:
+        AGENDA.pop(contato)
+        print("\n>>>O contato {} foi excluido com sucesso\n".format(contato))
+    except KeyError:
+        print("\n>>>O contato {} não existe \n".format(contato))
+    except Exception as e:
+        print(">>>Um erro inesperado aconteceu {}".format(e))
 
 
 def menu():
@@ -65,24 +78,47 @@ def menu():
 def escolha(opcao):
     match opcao:
         case '1':
+            os.system('clear')
             mostrar_contatos()
         case '2':
+            os.system('clear')
             buscar_contatos(input("Digite o nome do contato desejado "))
-        case '3'|'4':
-            contato = input("Digite o nome do contato a ser inserido ou editado: ")
-            endereco = input("Digite o endereco: ")
-            telefone = input("Digite o telefone: ")
-            email = input("Digite o email: ")
-            incluir_editar_contatos(contato, telefone, endereco, email)
-            buscar_contatos(contato)
+        case '3':
+            os.system('clear')
+            contato = input("Digite o nome do contato a ser inserido: ")
+
+            try:
+                AGENDA[contato]
+                print(">>> Contato já existente:", contato)
+            except KeyError:
+                incluir_editar_contatos(contato)
+                buscar_contatos(contato)
+            except Exception as e:
+                print(">>>Um erro inesperado aconteceu {}".format(e))
+        case '4':
+            os.system('clear')
+            contato = input("Digite o nome do contato a ser editado: ")
+
+            try:
+                AGENDA[contato]
+                incluir_editar_contatos(contato)
+                buscar_contatos(contato)
+            except KeyError:
+                print(">>> Contato inexistente")
+            except Exception as e:
+                print(">>>Um erro inesperado aconteceu {}".format(e))
+
         case '5':
-            excluir_contatos(input("Digite o nome do contato a ser excluido"))
+            os.system('clear')
+            excluir_contatos(input("Digite o nome do contato a ser excluido: "))
         case '0':
-            print("Fechando programa (╥︣﹏᷅╥)")
-            sys.exit()
+            os.system('clear')
+            print("Fechando programa: (╥︣﹏᷅╥)")
+            exit()
         case _:
             os.system('clear')
-            print("Opcao inválida")
+            print("\nOpcao inválida ( ˘︹˘ )\n")
+
 
 while True:
     menu()
