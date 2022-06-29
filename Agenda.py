@@ -5,17 +5,17 @@ AGENDA =\
         "Exemplo1":{
             "tel":"1111",
             "email":"exemplo1@gmail.com",
-            "endereco":"Rua x, 11"
+            "endereco":"Rua x 11"
         },
         "Exemplo2":{
             "tel":"2222",
             "email":"exemplo2@live.com",
-            "endereco":"Rua y, 22"
+            "endereco":"Rua y 22"
         },
         "Exemplo3": {
             "tel": "3333",
             "email": "exemplo3@hotmail.com",
-            "endereco": "Rua z, 33"
+            "endereco": "Rua z 33"
         }
     }
 
@@ -41,11 +41,7 @@ def buscar_contatos(contato):
         print(">>>Um erro inesperado aconteceu {}".format(e))
 
 
-def incluir_editar_contatos(contato):
-    endereco = input("Digite o endereco: ")
-    telefone = input("Digite o telefone: ")
-    email = input("Digite o email: ")
-
+def incluir_editar_contatos(contato,telefone,email,endereco):
     AGENDA [contato] = {
         "tel": telefone,
         "email": email,
@@ -65,16 +61,41 @@ def excluir_contatos(contato):
         print(">>>Um erro inesperado aconteceu {}".format(e))
 
 
+def ler_detalhes_contato():
+    endereco = input("Digite o endereco: ")
+    telefone = input("Digite o telefone: ")
+    email = input("Digite o email: ")
+    return telefone, email, endereco
+
 def exportar_contatos():
     try:
         with open('agenda.csv','w') as arquivo:
-            for contatos in AGENDA:
-                telefone = AGENDA[contatos]["tel"]
-                email = AGENDA[contatos]["email"]
-                endereco = AGENDA[contatos]["endereco"]
-                arquivo.write("{},{},{},{}\n".format(contatos,telefone,email,endereco))
+            for contato in AGENDA:
+                telefone = AGENDA[contato]["tel"]
+                email = AGENDA[contato]["email"]
+                endereco = AGENDA[contato]["endereco"]
+                arquivo.write("{},{},{},{}\n".format(contato,telefone,email,endereco))
     except Exception as e:
         print(">>> Ocorreu algum erro durante a exportação ", e)
+
+
+def importar_contatos(nome_do_arquivo):
+    try:
+        with open(nome_do_arquivo, 'r') as arquivo:
+            linhas = arquivo.readlines()
+            for linha in linhas:
+                detalhes = linha.strip().split(',')
+
+                contato = detalhes[0]
+                telefone = detalhes[1]
+                email = detalhes[2]
+                endereco = detalhes[3]
+
+                incluir_editar_contatos(contato,telefone,email,endereco)
+    except FileNotFoundError:
+        print(">>> Arquivo não encontrado")
+    except Exception as e:
+        print(">>> Um erro inesperado ocorreu",e)
 
 
 def menu():
@@ -84,6 +105,7 @@ def menu():
     print('4 - Editar contato')
     print('5 - Excluir contato')
     print('6 - Exportar contatos para CSV')
+    print('7 - Importar contatos CSV')
     print('0 - Sair da agenda')
     print("\n")
 
@@ -104,7 +126,8 @@ def escolha(opcao):
                 AGENDA[contato]
                 print(">>> Contato já existente:", contato)
             except KeyError:
-                incluir_editar_contatos(contato)
+                telefone, email, endereco = ler_detalhes_contato()
+                incluir_editar_contatos(contato,telefone,email,endereco)
                 buscar_contatos(contato)
             except Exception as e:
                 print(">>>Um erro inesperado aconteceu {}".format(e))
@@ -114,7 +137,8 @@ def escolha(opcao):
 
             try:
                 AGENDA[contato]
-                incluir_editar_contatos(contato)
+                telefone, email, endereco = ler_detalhes_contato()
+                incluir_editar_contatos(contato,telefone,email,endereco)
                 buscar_contatos(contato)
             except KeyError:
                 print(">>> Contato inexistente")
@@ -131,6 +155,9 @@ def escolha(opcao):
         case '6':
             os.system('clear')
             exportar_contatos()
+        case '7':
+            os.system('clear')
+            importar_contatos(input("Digite o nome do arquivo a ser importado: "))
         case _:
             os.system('clear')
             print("\nOpcao inválida ( ˘︹˘ )\n")
